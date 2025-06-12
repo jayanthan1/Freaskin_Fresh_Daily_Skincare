@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freskin - Daily Fresh Skincare</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b9d;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b9d, #ffd93d);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b9d, #ffd93d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Subscription Plans */
+        .plans {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .plans h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 2rem;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card.popular {
+            transform: scale(1.05);
+            border: 3px solid #ffd93d;
+        }
+
+        .plan-card.popular::before {
+            content: "Most Popular";
+            position: absolute;
+            top: 1rem;
+            right: -2rem;
+            background: #ffd93d;
+            color: #333;
+            padding: 0.5rem 3rem;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .plan-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Quiz Section */
+        .quiz {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .quiz.active {
+            display: block;
+        }
+
+        .quiz h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 2rem;
+        }
+
+        .question {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .question h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1rem;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .option:hover, .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        /* Products Section */
+        .products {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .products h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .product-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .plan-card.popular {
+                transform: none;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">🌿 Freskin</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#plans">Plans</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn btn-secondary" onclick="openModal('loginModal')">Login</button>
+                <button class="btn btn-primary" onclick="openModal('signupModal')">Sign Up</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <h1>Fresh Daily Skincare</h1>
+            <p>Experience the power of nature with our daily fresh, preservative-free skincare products delivered to your doorstep</p>
+            <button class="btn btn-primary" onclick="openModal('quizModal')" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                <i class="fas fa-magic"></i> Start Skin Quiz
+            </button>
+        </section>
+
+        <!-- User Dashboard (Hidden by default) -->
+        <section class="dashboard" id="dashboard">
+            <div class="dashboard-header">
+                <div class="user-info">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h3 id="userName">Welcome Back!</h3>
+                        <p id="userPlan">Premium Plan</p>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3><i class="fas fa-calendar-alt"></i> Today's Delivery</h3>
+                    <div id="todayProducts">
+                        <p><strong>Morning:</strong> Cucumber-Aloe Face Gel</p>
+                        <p><strong>Evening:</strong> Rose-Honey Night Cream</p>
+                        <p><strong>Status:</strong> <span style="color: green;">Out for Delivery</span></p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-chart-line"></i> Skin Progress</h3>
+                    <div>
+                        <p>Days on Freskin: <strong>28 days</strong></p>
+                        <p>Skin Health Score: <strong>8.5/10</strong></p>
+                        <p>Improvement: <strong>+15%</strong></p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-heart"></i> Personalized Recommendations</h3>
+                    <div>
+                        <p>• Increase vitamin C products</p>
+                        <p>• Add weekly exfoliation</p>
+                        <p>• Consider hydrating masks</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-truck"></i> Delivery Schedule</h3>
+                    <div>
+                        <p><strong>Next 3 Days:</strong></p>
+                        <p>Tomorrow: Papaya-Honey Mask</p>
+                        <p>Day 2: Mint-Cucumber Toner</p>
+                        <p>Day 3: Oatmeal-Yogurt Scrub</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products" id="products">
+            <h2>Our Fresh Product Range</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-icon">🥭</div>
+                    <h3>Fruit Face Masks</h3>
+                    <p>Papaya-Honey, Mango-Oat, Banana-Milk masks delivered fresh daily</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">🥒</div>
+                    <h3>Natural Toners</h3>
+                    <p>Cucumber-Mint, Rose-Almond water toners for perfect pH balance</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">🌿</div>
+                    <h3>Hydrating Gels</h3>
+                    <p>Aloe-Chia, Green Tea-Hyaluronic acid gels for deep moisturization</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">🥛</div>
+                    <h3>Cleansing Milks</h3>
+                    <p>Raw Milk-Turmeric, Coconut-Rice cleansers for gentle purification</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">🌾</div>
+                    <h3>Gentle Scrubs</h3>
+                    <p>Oatmeal-Yogurt, Coffee-Sugar scrubs for natural exfoliation</p>
+                </div>
+                <div class="product-card">
+                    <div class="product-icon">🌹</div>
+                    <h3>Eye & Lip Care</h3>
+                    <p>Beetroot lip balm, Cucumber eye patches for targeted care</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subscription Plans -->
+        <section class="plans" id="plans">
+            <h2>Choose Your Fresh Journey</h2>
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <h3>Basic Fresh</h3>
+                    <div class="plan-price">₹899<span style="font-size: 1rem;">/month</span></div>
+                    <ul class="plan-features">
+                        <li>3 products per week</li>
+                        <li>Basic skin consultation</li>
+                        <li>Morning delivery</li>
+                        <li>Eco-friendly packaging</li>
+                    </ul>
+                    <button class="btn btn-secondary" onclick="selectPlan('basic')">Choose Plan</button>
+                </div>
+                
+                <div class="plan-card popular">
+                    <h3>Premium Fresh</h3>
+                    <div class="plan-price">₹1,599<span style="font-size: 1rem;">/month</span></div>
+                    <ul class="plan-features">
+                        <li>Daily fresh products</li>
+                        <li>Personal skin consultant</li>
+                        <li>Morning & evening delivery</li>
+                        <li>Custom formulations</li>
+                        <li>Progress tracking</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="selectPlan('premium')">Choose Plan</button>
+                </div>
+                
+                <div class="plan-card">
+                    <h3>Luxury Fresh</h3>
+                    <div class="plan-price">₹2,499<span style="font-size: 1rem;">/month</span></div>
+                    <ul class="plan-features">
+                        <li>Premium daily products</li>
+                        <li>Dermatologist consultation</li>
+                        <li>3x daily delivery</li>
+                        <li>Rare ingredient access</li>
+                        <li>24/7 skin support</li>
+                        <li>Spa-quality treatments</li>
+                    </ul>
+                    <button class="btn btn-secondary" onclick="selectPlan('luxury')">Choose Plan</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Login to Freskin</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('signupModal')">&times;</span>
+            <h2>Join Freskin</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name:</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email:</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhone">Phone:</label>
+                    <input type="tel" id="signupPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password:</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Skin Quiz Modal -->
+    <div id="quizModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('quizModal')">&times;</span>
+            <h2>Skin Analysis Quiz</h2>
+            <div id="quizContent">
+                <div class="question">
+                    <h3>What's your skin type?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, 'oily')">
+                            <i class="fas fa-tint"></i><br>Oily
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'dry')">
+                            <i class="fas fa-sun"></i><br>Dry
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'combination')">
+                            <i class="fas fa-balance-scale"></i><br>Combination
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'sensitive')">
+                            <i class="fas fa-exclamation-triangle"></i><br>Sensitive
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h3>Primary skin concerns?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, 'acne')">
+                            Acne & Breakouts
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'aging')">
+                            Anti-Aging
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'pigmentation')">
+                            Dark Spots
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'hydration')">
+                            Dehydration
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <h3>How often do you use skincare products?</h3>
+                    <div class="options">
+                        <div class="option" onclick="selectOption(this, 'daily')">
+                            Daily
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'weekly')">
+                            Few times a week
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'rarely')">
+                            Rarely
+                        </div>
+                        <div class="option" onclick="selectOption(this, 'never')">
+                            Never
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="submitQuiz()" style="width: 100%; margin-top: 2rem;">
+                Get My Recommendations
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let quizAnswers = {};
+        let selectedPlan = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleLogin();
+            });
+
+            // Signup form
+            document.getElementById('signupForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleSignup();
+            });
+
+            // Close modals when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = 'none';
+                }
+            });
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Authentication functions
+        function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Simulate API call
+            setTimeout(() => {
+                currentUser = {
+                    name: email.split('@')[0],
+                    email: email,
+                    plan: 'Premium Fresh',
+                    joinDate: new Date()
+                };
+                
+                updateUIForLoggedInUser();
+                closeModal('loginModal');
+                showNotification('Welcome back!', 'success');
+            }, 1000);
+        }
+
+        function handleSignup() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const phone = document.getElementById('signupPhone').value;
+            const password = document.getElementById('signupPassword').value;
+
+            // Simulate API call
+            setTimeout(() => {
+                currentUser = {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    plan: 'Basic Fresh',
+                    joinDate: new Date()
+                };
+                
+                updateUIForLoggedInUser();
+                closeModal('signupModal');
+                showNotification('Account created successfully!', 'success');
+            }, 1000);
+        }
+
+        function logout() {
+            currentUser = null;
+            document.querySelector('.dashboard').classList.remove('active');
+            document.querySelector('.hero').style.display = 'block';
+            document.querySelector('.auth-buttons').style.display = 'flex';
+            showNotification('Logged out successfully!', 'info');
+        }
+
+        function checkLoginStatus() {
+            // In a real app, this would check localStorage/sessionStorage or make an API call
+            // For demo, we'll start logged out
+        }
+
+        function updateUIForLoggedInUser() {
+            document.getElementById('userName').textContent = `Welcome, ${currentUser.name}!`;
+            document.getElementById('userPlan').textContent = currentUser.plan;
+            
+            document.querySelector('.dashboard').classList.add('active');
+            document.querySelector('.hero').style.display = 'none';
+            document.querySelector('.auth-buttons').style.display = 'none';
+        }
+
+        // Quiz functions
+        function selectOption(element, value) {
+            // Remove selected class from siblings
+            const siblings = element.parentNode.querySelectorAll('.option');
+            siblings.forEach(sibling => sibling.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Store answer
+            const questionIndex = Array.from(element.closest('.modal-content').querySelectorAll('.question')).indexOf(element.closest('.question'));
+            quizAnswers[questionIndex] = value;
+        }
+
+        function submitQuiz() {
+            const answers = Object.keys(quizAnswers).length;
+            const totalQuestions = document.querySelectorAll('#quizModal .question').length;
+            
+            if (answers < totalQuestions) {
+                showNotification('Please answer all questions!', 'warning');
+                return;
+            }
+
+            // Process quiz results
+            const recommendations = generateRecommendations(quizAnswers);
+            showRecommendations(recommendations);
+            closeModal('quizModal');
+        }
+
+        function generateRecommendations(answers) {
+            // Simple recommendation logic based on answers
+            const skinType = answers[0];
+            const concerns = answers[1];
+            const frequency = answers[2];
+
+            let recommendations = {
+                products: [],
+                routine: '',
+                plan: 'Premium Fresh'
+            };
+
+            // Product recommendations based on skin type
+            switch(skinType) {
+                case 'oily':
+                    recommendations.products = ['Tea Tree Face Wash', 'Clay Mask', 'Niacinamide Serum'];
+                    break;
+                case 'dry':
+                    recommendations.products = ['Hydrating Cleanser', 'Honey-Oat Mask', 'Hyaluronic Serum'];
+                    break;
+                case 'combination':
+                    recommendations.products = ['Gentle Cleanser', 'Multi-zone Treatment', 'Balanced Moisturizer'];
+                    break;
+                case 'sensitive':
+                    recommendations.products = ['Gentle Milk Cleanser', 'Calming Aloe Mask', 'Chamomile Toner'];
+                    break;
+            }
+
+            return recommendations;
+        }
+
+        function showRecommendations(recommendations) {
+            const recommendationsHTML = `
+                <div style="background: white; border-radius: 20px; padding: 2rem; margin: 2rem 0; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+                    <h2 style="color: #667eea; text-align: center; margin-bottom: 2rem;">
+                        <i class="fas fa-magic"></i> Your Personalized Recommendations
+                    </h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 15px;">
+                            <h3 style="color: #667eea; margin-bottom: 1rem;">
+                                <i class="fas fa-leaf"></i> Recommended Products
+                            </h3>
+                            <ul style="list-style: none; padding: 0;">
+                                ${recommendations.products.map(product => `<li style="padding: 0.5rem 0; border-bottom: 1px solid #e0e0e0;">• ${product}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 15px;">
+                            <h3 style="color: #667eea; margin-bottom: 1rem;">
+                                <i class="fas fa-calendar-check"></i> Suggested Plan
+                            </h3>
+                            <p style="font-size: 1.2rem; font-weight: bold; color: #333;">${recommendations.plan}</p>
+                            <p style="margin-top: 1rem;">Perfect for your skin type and lifestyle</p>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="btn btn-primary" onclick="openModal('signupModal')" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                            Start Your Fresh Journey
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Insert recommendations after hero section
+            const hero = document.querySelector('.hero');
+            hero.insertAdjacentHTML('afterend', recommendationsHTML);
+            
+            // Scroll to recommendations
+            setTimeout(() => {
+                hero.nextElementSibling.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // Plan selection
+        function selectPlan(planType) {
+            selectedPlan = planType;
+            if (currentUser) {
+                showNotification(`${planType.charAt(0).toUpperCase() + planType.slice(1)} plan selected!`, 'success');
+                // Redirect to payment or update user plan
+                updateUserPlan(planType);
+            } else {
+                showNotification('Please login to select a plan', 'warning');
+                openModal('loginModal');
+            }
+        }
+
+        function updateUserPlan(planType) {
+            const planNames = {
+                'basic': 'Basic Fresh',
+                'premium': 'Premium Fresh',
+                'luxury': 'Luxury Fresh'
+            };
+            
+            if (currentUser) {
+                currentUser.plan = planNames[planType];
+                document.getElementById('userPlan').textContent = currentUser.plan;
+                showNotification('Plan updated successfully!', 'success');
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'warning' ? '#FF9800' : '#2196F3'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                z-index: 3000;
+                animation: slideIn 0.3s ease-out;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+            
+            // Add slide-in animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; margin-left: 1rem;">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOut 0.3s ease-in';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        // Smooth scrolling for navigation
+        function smoothScroll(targetId) {
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // Update navigation links to use smooth scrolling
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    smoothScroll(targetId);
+                });
+            });
+        });
+
+        // Simulate real-time delivery updates
+        function updateDeliveryStatus() {
+            if (currentUser) {
+                const statuses = ['Preparing', 'Out for Delivery', 'Delivered'];
+                const currentStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                const statusElement = document.querySelector('#todayProducts span');
+                if (statusElement) {
+                    statusElement.textContent = currentStatus;
+                    statusElement.style.color = currentStatus === 'Delivered' ? 'green' : 
+                                               currentStatus === 'Out for Delivery' ? 'orange' : 'blue';
+                }
+            }
+        }
+
+        // Update delivery status every 30 seconds (for demo)
+        setInterval(updateDeliveryStatus, 30000);
+
+        // Add loading states to buttons
+        function addLoadingState(button) {
+            button.disabled = true;
+            button.innerHTML = '<span class="loading"></span> Processing...';
+        }
+
+        function removeLoadingState(button, originalText) {
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
+
+        // Enhanced form validation
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePhone(phone) {
+            const re = /^[+]?[\d\s\-\(\)]{10,}$/;
+            return re.test(phone);
+        }
+
+        // Add real-time form validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInputs = document.querySelectorAll('input[type="email"]');
+            const phoneInputs = document.querySelectorAll('input[type="tel"]');
+            
+            emailInputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value && !validateEmail(this.value)) {
+                        this.style.borderColor = '#f44336';
+                        showNotification('Please enter a valid email address', 'warning');
+                    } else {
+                        this.style.borderColor = '#4CAF50';
+                    }
+                });
+            });
+            
+            phoneInputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.value && !validatePhone(this.value)) {
+                        this.style.borderColor = '#f44336';
+                        showNotification('Please enter a valid phone number', 'warning');
+                    } else {
+                        this.style.borderColor = '#4CAF50';
+                    }
+                });
+            });
+        });
+
+        // Progressive Web App features
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed');
+                    });
+            });
+        }
+
+        // Add to home screen prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install button
+            const installButton = document.createElement('button');
+            installButton.className = 'btn btn-secondary';
+            installButton.innerHTML = '<i class="fas fa-download"></i> Install App';
+            installButton.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            `;
+            
+            installButton.addEventListener('click', () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showNotification('App installed successfully!', 'success');
+                    }
+                    deferredPrompt = null;
+                    installButton.remove();
+                });
+            });
+            
+            document.body.appendChild(installButton);
+        });
+    </script>
+</body>
+</html>
